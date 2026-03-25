@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!PLANETA AGUA>
 <html>
 <head>
   <title>Água e Gelo do Jorge</title>
@@ -109,7 +109,7 @@
   <p>Peça direto pelo WhatsApp</p>
 </div>
 
-<a href="https://wa.me/5521994450547">
+<a href="https://wa.me/+55 21 99242-9919">
   <button>📲 Fazer Pedido Agora</button>
 </a>
 
