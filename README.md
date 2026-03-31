@@ -18,7 +18,7 @@
         input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
         button { border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; width: 100%; transition: 0.2s; }
         .btn-main { background: var(--primary); }
-        .btn-support { background: var(--whatsapp); margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-whatsapp { background: var(--whatsapp); margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-remove { background: #ff5252; width: 30px; height: 30px; padding: 0; border-radius: 5px; }
         
         .header { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
@@ -48,7 +48,7 @@
             <input id="lCpf" placeholder="CPF ou 'admin'">
             <input id="lSenha" type="password" placeholder="Senha">
             <button class="btn-main" onclick="entrar()">Entrar</button>
-            <button class="btn-support" onclick="abrirSuporteVisitante()">💬 Suporte</button>
+            <button class="btn-whatsapp" onclick="abrirSuporteVisitante()">💬 Suporte Chat</button>
             <p onclick="ir('cadastro')" style="color:var(--primary); cursor:pointer; margin-top:20px;">Criar Conta</p>
         </div>
     </div>
@@ -98,7 +98,8 @@
                 <option value="Dinheiro">Dinheiro</option>
             </select>
             <h2 id="totalCarrinho" style="text-align:right">Total: R$ 0,00</h2>
-            <button class="btn-main" onclick="finalizarPedido()">Enviar Pedido no Chat</button>
+            <button class="btn-whatsapp" onclick="finalizarPedido(true)">🚀 Enviar via WhatsApp</button>
+            <button class="btn-main" onclick="finalizarPedido(false)" style="margin-top:10px; background:#444">Apenas salvar no Chat</button>
         </div>
     </div>
 </div>
@@ -112,6 +113,7 @@
         <div class="card">
             <h3>🎨 Modelagem do Site</h3>
             <input id="cfgNome" placeholder="Nome do Mercado">
+            <input id="cfgWhats" placeholder="WhatsApp p/ Receber Pedidos (ex: 5521999999999)">
             <input type="color" id="cfgCor">
             <button onclick="salvarConfigSemRefresh()" class="btn-main">Aplicar Agora</button>
         </div>
@@ -153,7 +155,7 @@
 <script>
 let usuarios = JSON.parse(localStorage.getItem("m_users")) || {};
 let produtos = JSON.parse(localStorage.getItem("m_prod")) || [];
-let config = JSON.parse(localStorage.getItem("m_cfg")) || { nome: "Medela Supermercado", cor: "#e53935" };
+let config = JSON.parse(localStorage.getItem("m_cfg")) || { nome: "Medela Supermercado", cor: "#e53935", whats: "" };
 let mensagens = JSON.parse(localStorage.getItem("m_chat")) || {};
 let carrinho = [];
 let sessaoAtiva = ""; let clienteNoChat = ""; let modoAdminChat = false;
@@ -163,6 +165,7 @@ function aplicarEstilos() {
     document.getElementById("siteTitle").innerText = config.nome;
     document.getElementById("dynamicStyles").innerHTML = `:root { --primary: ${config.cor}; --admin-bg: #2c3e50; --bg: #f4f4f4; --whatsapp: #25d366; }`;
     document.getElementById("headerCliente").style.backgroundColor = config.cor;
+    document.getElementById("cfgWhats").value = config.whats || "";
 }
 
 function ir(tela) {
@@ -193,21 +196,16 @@ function registrar() {
     ir('login');
 }
 
-/* CARRINHO - ADICIONAR E REMOVER */
+/* CARRINHO */
 function addAoCarrinho(nome, preco) {
     carrinho.push({ id: Date.now(), nome, preco });
-    atualizarContador();
-    alert(nome + " no carrinho!");
+    document.getElementById("cartCount").innerText = carrinho.length;
 }
 
 function removerDoCarrinho(idItem) {
     carrinho = carrinho.filter(i => i.id !== idItem);
-    atualizarContador();
-    renderizarCarrinho();
-}
-
-function atualizarContador() {
     document.getElementById("cartCount").innerText = carrinho.length;
+    renderizarCarrinho();
 }
 
 function renderizarCarrinho() {
@@ -229,23 +227,30 @@ function renderizarCarrinho() {
     document.getElementById("totalCarrinho").innerText = "Total: R$ " + total.toFixed(2);
 }
 
-function finalizarPedido() {
+function finalizarPedido(viaWhats) {
     let endereco = document.getElementById("endEntrega").value;
     let pagamento = document.getElementById("formaPagto").value;
     if(carrinho.length === 0) return;
     if(!endereco || !pagamento) return alert("Preencha o endereço e pagamento!");
 
-    let resumo = "📝 NOVO PEDIDO:\n";
+    let resumo = "🛒 *NOVO PEDIDO:*\n\n";
     let total = 0;
-    carrinho.forEach(i => { resumo += `- ${i.nome}: R$ ${i.preco.toFixed(2)}\n`; total += i.preco; });
-    resumo += `\n📍 Endereço: ${endereco}\n💳 Pagamento: ${pagamento}\n💰 TOTAL: R$ ${total.toFixed(2)}`;
+    carrinho.forEach(i => { resumo += `▪️ ${i.nome}: R$ ${i.preco.toFixed(2)}\n`; total += i.preco; });
+    resumo += `\n📍 *Endereço:* ${endereco}\n💳 *Pagamento:* ${pagamento}\n💰 *TOTAL: R$ ${total.toFixed(2)}*`;
 
+    // Salva no chat interno
     if(!mensagens[sessaoAtiva]) mensagens[sessaoAtiva] = [];
     mensagens[sessaoAtiva].push({ texto: resumo, autor: 'cliente' });
     localStorage.setItem("m_chat", JSON.stringify(mensagens));
     
-    carrinho = []; atualizarContador();
-    alert("Pedido enviado!"); ir('chat');
+    if(viaWhats) {
+        if(!config.whats) return alert("Configure o número de WhatsApp no Painel Admin primeiro!");
+        let link = `https://api.whatsapp.com/send?phone=${config.whats}&text=${encodeURIComponent(resumo)}`;
+        window.open(link, '_blank');
+    }
+
+    carrinho = []; document.getElementById("cartCount").innerText = "0";
+    alert("Pedido processado!"); ir('chat');
 }
 
 /* CHAT */
@@ -310,12 +315,13 @@ function addProduto() {
 function salvarConfigSemRefresh() {
     config.nome = document.getElementById("cfgNome").value || config.nome;
     config.cor = document.getElementById("cfgCor").value;
+    config.whats = document.getElementById("cfgWhats").value;
     localStorage.setItem("m_cfg", JSON.stringify(config));
-    aplicarEstilos(); alert("Aplicado!");
+    aplicarEstilos(); alert("Configurações Aplicadas!");
 }
 
 function voltarParaLogin() {
-    sessaoAtiva = ""; carrinho = []; atualizarContador();
+    sessaoAtiva = ""; carrinho = []; document.getElementById("cartCount").innerText = "0";
     ir('login');
 }
 
