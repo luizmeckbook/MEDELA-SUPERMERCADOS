@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -20,6 +20,7 @@
         .btn-main { background: var(--primary); }
         .btn-whatsapp { background: var(--whatsapp); margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-remove { background: #ff5252; width: 30px; height: 30px; padding: 0; border-radius: 5px; }
+        .btn-sec { background: #555; margin-top: 5px; }
         
         .header { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         
@@ -75,13 +76,24 @@
         <button style="width:auto; background:rgba(0,0,0,0.2)" onclick="voltarParaLogin()">Sair</button>
     </div>
     <div class="container">
+        <button class="btn-sec" onclick="ir('pedidos_cliente')">📦 Meus Pedidos / Rastreio</button>
         <div class="cat-nav" id="catNav"></div>
         <div class="grid" id="listaLoja"></div>
     </div>
     <div class="cart-float" onclick="ir('carrinho')">
         🛒 <span class="cart-count" id="cartCount">0</span>
     </div>
-    <button onclick="ir('chat')" style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%; background:var(--whatsapp); border:none; font-size:25px; color:white; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">💬</button>
+    <button onclick="ir('chat')" title="Suporte" style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%; background:var(--whatsapp); border:none; font-size:25px; color:white; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">💬</button>
+</div>
+
+<div id="pedidos_cliente" class="tela">
+    <div class="header">
+        <button onclick="ir('home')" style="width:auto; background:none; font-size:20px">←</button>
+        <span>Meus Pedidos</span>
+        <div style="width:30px"></div>
+    </div>
+    <div class="container" id="lista_pedidos_cliente">
+        </div>
 </div>
 
 <div id="carrinho" class="tela">
@@ -98,24 +110,19 @@
                 <option value="retirada">Retirar na Loja (Grátis)</option>
                 <option value="entrega">Receber em Casa (+ R$ 7,00)</option>
             </select>
-
             <div id="boxEndereco" style="display:none">
                 <textarea id="endEntrega" placeholder="Endereço Completo (Rua, Nº, Bairro)"></textarea>
             </div>
-
             <select id="formaPagto">
                 <option value="">Forma de Pagamento</option>
                 <option value="Pix">Pix</option>
                 <option value="Cartão">Cartão (na entrega)</option>
                 <option value="Dinheiro">Dinheiro</option>
             </select>
-
             <div class="total-info" id="txtSubtotal">Subtotal: R$ 0,00</div>
             <div class="total-info" id="txtTaxa">Entrega: R$ 0,00</div>
             <h2 id="totalCarrinho" style="text-align:right; margin-top:0;">Total: R$ 0,00</h2>
-            
             <button class="btn-whatsapp" onclick="finalizarPedido(true)">🚀 Enviar via WhatsApp</button>
-            <button class="btn-main" onclick="finalizarPedido(false)" style="margin-top:10px; background:#444">Salvar apenas no Chat</button>
         </div>
     </div>
 </div>
@@ -127,38 +134,34 @@
     </div>
     <div class="container">
         <div class="finance-box">
-            <div class="fin-card" style="background:#2ecc71">
-                <small>Faturamento (Venda)</small><br>
-                <strong id="finBruto">R$ 0,00</strong>
-            </div>
-            <div class="fin-card" style="background:#3498db">
-                <small>Lucro (Líquido)</small><br>
-                <strong id="finLiquido">R$ 0,00</strong>
-            </div>
+            <div class="fin-card" style="background:#2ecc71"><small>Faturamento</small><br><strong id="finBruto">R$ 0,00</strong></div>
+            <div class="fin-card" style="background:#3498db"><small>Lucro Líquido</small><br><strong id="finLiquido">R$ 0,00</strong></div>
         </div>
         <div class="card">
-            <h3>🎨 Configurações</h3>
+            <h3>📦 Pedidos Realizados</h3>
+            <div id="lista_pedidos_admin"></div>
+        </div>
+        <div class="card">
+            <h3>💬 Conversas de Suporte</h3>
+            <div id="lista_chats_admin"></div>
+        </div>
+        <div class="card">
+            <h3>🎨 Configurações e Novo Produto</h3>
             <input id="cfgNome" placeholder="Nome do Mercado">
             <input id="cfgWhats" placeholder="WhatsApp (5521999999999)">
             <input type="color" id="cfgCor">
-            <button onclick="salvarConfigSemRefresh()" class="btn-main">Salvar</button>
-        </div>
-        <div class="card">
-            <h3>📦 Novo Produto</h3>
-            <input id="pNome" placeholder="Nome">
+            <button onclick="salvarConfigSemRefresh()" class="btn-main">Salvar Site</button>
+            <hr>
+            <input id="pNome" placeholder="Nome do Produto">
             <input id="pCusto" type="number" step="0.01" placeholder="Custo (Líquido)">
             <input id="pVenda" type="number" step="0.01" placeholder="Venda (Bruto)">
             <select id="pCat">
                 <option>Açougue</option><option>Bebida</option><option>Limpeza</option><option>Padaria</option><option>Mercearia</option>
             </select>
-            <button onclick="addProduto()" class="btn-main" style="background:var(--admin-bg)">Cadastrar</button>
+            <button onclick="addProduto()" class="btn-main" style="background:var(--admin-bg)">Cadastrar Produto</button>
         </div>
         <div class="card">
-            <h3>💬 Pedidos/Chat</h3>
-            <div id="lista_chats_admin"></div>
-        </div>
-        <div class="card">
-            <h3>👥 Usuários</h3>
+            <h3>👥 Clientes</h3>
             <div id="lista_usuarios_admin"></div>
         </div>
     </div>
@@ -168,12 +171,12 @@
     <div class="chat-screen">
         <div class="header" style="background:#075e54">
             <button onclick="voltarDoChat()" style="width:auto; background:none; font-size:20px">←</button>
-            <span id="chatTitulo">Chat</span>
+            <span id="chatTitulo">Suporte Medela</span>
             <div style="width:30px"></div>
         </div>
         <div class="chat-messages" id="box_msgs"></div>
         <div class="chat-footer">
-            <input id="msg_input" placeholder="Mensagem...">
+            <input id="msg_input" placeholder="Dúvida ou problema?">
             <button onclick="enviarMensagem()" style="width:50px; border-radius:50%; background:var(--whatsapp); color:white">➤</button>
         </div>
     </div>
@@ -183,7 +186,8 @@
 let usuarios = JSON.parse(localStorage.getItem("m_users")) || {};
 let produtos = JSON.parse(localStorage.getItem("m_prod")) || [];
 let config = JSON.parse(localStorage.getItem("m_cfg")) || { nome: "Medela Supermercado", cor: "#e53935", whats: "" };
-let mensagens = JSON.parse(localStorage.getItem("m_chat")) || {};
+let mensagens = JSON.parse(localStorage.getItem("m_chat")) || {}; 
+let pedidos_db = JSON.parse(localStorage.getItem("m_pedidos")) || [];
 let carrinho = [];
 let taxaEntrega = 7.00;
 let sessaoAtiva = ""; let clienteNoChat = ""; let modoAdminChat = false;
@@ -203,6 +207,7 @@ function ir(tela) {
     if(tela === 'admin') renderizarAdmin();
     if(tela === 'carrinho') renderizarCarrinho();
     if(tela === 'chat') renderizarMensagens();
+    if(tela === 'pedidos_cliente') renderizarPedidosCliente();
     window.scrollTo(0,0);
 }
 
@@ -224,7 +229,7 @@ function registrar() {
     ir('login');
 }
 
-/* CARRINHO */
+/* CARRINHO E PEDIDOS */
 function addAoCarrinho(nome, preco) {
     carrinho.push({ id: Date.now(), nome, preco });
     document.getElementById("cartCount").innerText = carrinho.length;
@@ -240,7 +245,6 @@ function renderizarCarrinho() {
     let box = document.getElementById("itensCarrinho");
     let subtotal = 0;
     let tipo = document.getElementById("tipoEntrega").value;
-    
     if(carrinho.length === 0) {
         box.innerHTML = "<p style='text-align:center'>Vazio.</p>";
         document.getElementById("cardCheckout").style.display = "none";
@@ -254,7 +258,6 @@ function renderizarCarrinho() {
         }).join('');
         document.getElementById("cardCheckout").style.display = "block";
     }
-
     let taxa = tipo === "entrega" ? taxaEntrega : 0;
     document.getElementById("boxEndereco").style.display = tipo === "entrega" ? "block" : "none";
     document.getElementById("txtSubtotal").innerText = "Subtotal: R$ " + subtotal.toFixed(2);
@@ -266,46 +269,76 @@ function finalizarPedido(viaWhats) {
     let tipo = document.getElementById("tipoEntrega").value;
     let endereco = document.getElementById("endEntrega").value;
     let pagamento = document.getElementById("formaPagto").value;
-    
     if(tipo === "entrega" && !endereco) return alert("Informe o endereço!");
     if(!pagamento) return alert("Escolha o pagamento!");
 
-    let subtotal = 0;
-    let resumo = `🛒 *NOVO PEDIDO (${tipo.toUpperCase()})*\n\n`;
-    carrinho.forEach(i => { resumo += `▪️ ${i.nome}: R$ ${i.preco.toFixed(2)}\n`; subtotal += i.preco; });
-    
-    let taxa = tipo === "entrega" ? taxaEntrega : 0;
-    resumo += `\n📦 *Entrega:* R$ ${taxa.toFixed(2)}`;
-    resumo += `\n💰 *TOTAL: R$ ${(subtotal + taxa).toFixed(2)}*`;
-    resumo += `\n💳 *Pagamento:* ${pagamento}`;
-    if(tipo === "entrega") resumo += `\n📍 *Endereço:* ${endereco}`;
+    let total_final = 0;
+    let itens_nomes = [];
+    carrinho.forEach(i => { total_final += i.preco; itens_nomes.push(i.nome); });
+    if(tipo === "entrega") total_final += taxaEntrega;
 
-    if(!mensagens[sessaoAtiva]) mensagens[sessaoAtiva] = [];
-    mensagens[sessaoAtiva].push({ texto: resumo, autor: 'cliente' });
-    localStorage.setItem("m_chat", JSON.stringify(mensagens));
+    let novoPedido = {
+        id: "#" + Math.floor(Math.random() * 9000 + 1000),
+        clienteCpf: sessaoAtiva,
+        clienteNome: usuarios[sessaoAtiva]?.nome || "Visitante",
+        itens: itens_nomes.join(", "),
+        total: total_final,
+        tipo: tipo,
+        pagamento: pagamento,
+        endereco: tipo === "entrega" ? endereco : "Retirada na Loja",
+        data: new Date().toLocaleString()
+    };
+
+    pedidos_db.unshift(novoPedido);
+    localStorage.setItem("m_pedidos", JSON.stringify(pedidos_db));
+
+    let resumo = `🛒 *PEDIDO ${novoPedido.id}*\n\n▪️ Itens: ${novoPedido.itens}\n💰 *TOTAL: R$ ${novoPedido.total.toFixed(2)}*\n📦 Tipo: ${tipo}\n💳 Pgto: ${pagamento}\n📍 Local: ${novoPedido.endereco}`;
     
     if(viaWhats) {
-        if(!config.whats) return alert("Falta o WhatsApp no Admin!");
         window.open(`https://api.whatsapp.com/send?phone=${config.whats}&text=${encodeURIComponent(resumo)}`, '_blank');
     }
 
     carrinho = []; document.getElementById("cartCount").innerText = "0";
-    alert("Pedido enviado!"); ir('chat');
+    alert("Pedido Realizado com Sucesso!");
+    ir('pedidos_cliente');
+}
+
+function renderizarPedidosCliente() {
+    let lista = pedidos_db.filter(p => p.clienteCpf === sessaoAtiva);
+    document.getElementById("lista_pedidos_cliente").innerHTML = lista.map(p => `
+        <div class="card">
+            <div style="display:flex; justify-content:space-between"><strong>Pedido ${p.id}</strong> <span style="color:var(--primary)">Pendente</span></div>
+            <small>${p.data}</small><br>
+            <p>${p.itens}</p>
+            <div style="text-align:right"><strong>Total: R$ ${p.total.toFixed(2)}</strong></div>
+        </div>
+    `).join('') || "<p style='text-align:center'>Nenhum pedido encontrado.</p>";
 }
 
 /* ADMIN */
 function renderizarAdmin() {
-    document.getElementById("lista_usuarios_admin").innerHTML = Object.keys(usuarios).map(c => `
-        <div style="border-bottom:1px solid #eee; padding:10px 0"><b>${usuarios[c].nome}</b> | Senha: <b style="color:red">${usuarios[c].senha}</b></div>
-    `).join('') || "Vazio.";
+    document.getElementById("lista_pedidos_admin").innerHTML = pedidos_db.map(p => `
+        <div style="border-bottom:1px solid #eee; padding:10px 0">
+            <b>${p.id} - ${p.clienteNome}</b><br>
+            ${p.itens}<br>
+            <small>${p.endereco} | ${p.pagamento}</small><br>
+            <strong>R$ ${p.total.toFixed(2)}</strong>
+        </div>
+    `).join('') || "Sem pedidos.";
+
     document.getElementById("lista_chats_admin").innerHTML = Object.keys(mensagens).map(c => `
-        <button onclick="abrirChatAdmin('${c}')" style="background:#eee; color:#333; margin-bottom:5px; text-align:left">🛒 Pedido: ${usuarios[c]?.nome || c}</button>
-    `).join('') || "Vazio.";
+        <button onclick="abrirChatAdmin('${c}')" style="background:#eee; color:#333; margin-bottom:5px; text-align:left">💬 Chat: ${usuarios[c]?.nome || c}</button>
+    `).join('') || "Sem conversas.";
 
     let bruto = 0, custo = 0;
-    produtos.forEach(p => { bruto += p.preco; custo += (p.custo || 0); });
+    pedidos_db.forEach(p => bruto += p.total);
+    produtos.forEach(p => custo += (p.custo || 0));
     document.getElementById("finBruto").innerText = "R$ " + bruto.toFixed(2);
     document.getElementById("finLiquido").innerText = "R$ " + (bruto - custo).toFixed(2);
+    
+    document.getElementById("lista_usuarios_admin").innerHTML = Object.keys(usuarios).map(c => `
+        <div style="font-size:12px">${usuarios[c].nome} | ${c} | Senha: ${usuarios[c].senha}</div>
+    `).join('');
 }
 
 function addProduto() {
@@ -313,7 +346,7 @@ function addProduto() {
     let cus = parseFloat(document.getElementById("pCusto").value);
     let ven = parseFloat(document.getElementById("pVenda").value);
     let cat = document.getElementById("pCat").value;
-    if(!n || isNaN(cus) || isNaN(ven)) return alert("Valores inválidos!");
+    if(!n || isNaN(ven)) return;
     produtos.push({nome: n, preco: ven, custo: cus, cat: cat});
     localStorage.setItem("m_prod", JSON.stringify(produtos));
     renderizarAdmin();
@@ -324,12 +357,12 @@ function salvarConfigSemRefresh() {
     config.cor = document.getElementById("cfgCor").value;
     config.whats = document.getElementById("cfgWhats").value;
     localStorage.setItem("m_cfg", JSON.stringify(config));
-    aplicarEstilos(); alert("Salvo!");
+    aplicarEstilos(); alert("Configurações Salvas!");
 }
 
 function voltarParaLogin() { sessaoAtiva = ""; ir('login'); }
 
-/* LOJA */
+/* LOJA E CHAT */
 function renderizarLoja() {
     document.getElementById("welcome").innerText = "Olá, " + (usuarios[sessaoAtiva]?.nome || "Cliente");
     const cats = ["Todos", "Açougue", "Bebida", "Limpeza", "Padaria", "Mercearia"];
@@ -346,16 +379,15 @@ function renderizarFiltrado(cat) {
         </div>`).join('') || "Vazio.";
 }
 
-/* CHAT */
 function abrirSuporteVisitante() {
     sessaoAtiva = "visitante_" + Math.floor(Math.random()*999);
     clienteNoChat = sessaoAtiva; modoAdminChat = false;
-    document.getElementById("chatTitulo").innerText = "Suporte"; ir('chat');
+    ir('chat');
 }
 
 function abrirChatAdmin(cpf) {
     clienteNoChat = cpf; modoAdminChat = true;
-    document.getElementById("chatTitulo").innerText = "Cliente: " + (usuarios[cpf]?.nome || cpf); ir('chat');
+    ir('chat');
 }
 
 function enviarMensagem() {
@@ -372,18 +404,6 @@ function renderizarMensagens() {
     let id = modoAdminChat ? clienteNoChat : sessaoAtiva;
     let msgs = mensagens[id] || [];
     document.getElementById("box_msgs").innerHTML = msgs.map(m => `
-        <div class="msg ${m.autor === (modoAdminChat ? 'admin' : 'cliente') ? 'sent' : 'received'}">${m.texto.replace(/\n/g, '<br>')}</div>
+        <div class="msg ${m.autor === (modoAdminChat ? 'admin' : 'cliente') ? 'sent' : 'received'}">${m.texto}</div>
     `).join('');
     document.getElementById("box_msgs").scrollTop = 9999;
-}
-
-function voltarDoChat() {
-    if(modoAdminChat) ir('admin');
-    else if(sessaoAtiva.includes("visitante")) ir('login');
-    else ir('home');
-}
-
-window.onload = aplicarEstilos;
-</script>
-</body>
-</html>
