@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -8,32 +8,35 @@
         :root { --primary: #e53935; --admin-bg: #2c3e50; --bg: #f4f4f4; --whatsapp: #25d366; }
     </style>
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin:0; font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); min-height: 100vh; overflow-x: hidden; }
-        .tela { display:none; min-height: 100vh; width: 100%; background: var(--bg); }
+        .tela { display:none; min-height: 100vh; width: 100%; background: var(--bg); padding-bottom: 20px; }
         .ativa { display:block; }
         .container { padding: 15px; max-width: 600px; margin: auto; }
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
         
-        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; }
-        button { border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; width: 100%; transition: 0.2s; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; outline: none; display: block; }
+        button { border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; width: 100%; transition: 0.2s; display: block; margin-top: 5px; }
+        button:active { transform: scale(0.98); opacity: 0.8; }
+        
         .btn-main { background: var(--primary); }
-        .btn-whatsapp { background: var(--whatsapp); margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-remove { background: #ff5252; width: 30px; height: 30px; padding: 0; border-radius: 5px; }
-        .btn-sec { background: #555; margin-top: 5px; }
+        .btn-whatsapp { background: var(--whatsapp); display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-remove { background: #ff5252; width: 35px; height: 35px; padding: 0; border-radius: 5px; margin: 0; }
+        .btn-sec { background: #555; }
         
         .header { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; height: 60px; }
         
         .chat-screen { display: flex; flex-direction: column; height: 100vh; background: #e5ddd5; }
         .chat-messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 8px; }
         .msg { max-width: 80%; padding: 10px; border-radius: 10px; font-size: 14px; word-wrap: break-word; }
-        .msg.sent { align-self: flex-end; background: #dcf8c6; }
-        .msg.received { align-self: flex-start; background: white; }
-        .chat-footer { padding: 10px; background: #f0f0f0; display: flex; gap: 5px; }
+        .msg.sent { align-self: flex-end; background: #dcf8c6; border-bottom-right-radius: 0; }
+        .msg.received { align-self: flex-start; background: white; border-bottom-left-radius: 0; }
+        .chat-footer { padding: 10px; background: #f0f0f0; display: flex; gap: 5px; align-items: center; }
+        .chat-footer input { margin: 0; flex: 1; }
         
         .cat-nav { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
-        .cat-btn { background: white; border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; white-space: nowrap; width: auto; color: #333; }
-        .cat-btn.active { background: var(--primary); color: white; }
+        .cat-btn { background: white; border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; white-space: nowrap; width: auto; color: #333; margin: 0; }
+        .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
         .cart-float { position: fixed; bottom: 90px; right: 20px; width: 60px; height: 60px; border-radius: 50%; background: #000; color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; z-index: 99; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
@@ -47,14 +50,15 @@
 <body>
 
 <div id="login" class="tela ativa">
-    <div class="container" style="text-align:center; padding-top:60px;">
+    <div class="container" style="text-align:center; padding-top:40px;">
         <h1 id="brandName">🛒 Medela Supermercado</h1>
         <div class="card">
-            <input id="lCpf" placeholder="CPF ou 'admin'">
-            <input id="lSenha" type="password" placeholder="Senha">
-            <button class="btn-main" onclick="entrar()">Entrar</button>
-            <button class="btn-whatsapp" onclick="abrirSuporteVisitante()">💬 Chat Suporte</button>
-            <p onclick="ir('cadastro')" style="color:var(--primary); cursor:pointer; margin-top:20px;">Criar Conta</p>
+            <h3>Entrar</h3>
+            <input type="text" id="lCpf" placeholder="CPF ou 'admin'">
+            <input type="password" id="lSenha" placeholder="Senha">
+            <button class="btn-main" onclick="entrar()">Acessar Painel</button>
+            <button class="btn-whatsapp" onclick="abrirSuporteVisitante()">💬 Suporte Chat</button>
+            <p onclick="ir('cadastro')" style="color:var(--primary); cursor:pointer; margin-top:20px; font-weight:bold;">Não tem conta? Cadastre-se</p>
         </div>
     </div>
 </div>
@@ -62,34 +66,36 @@
 <div id="cadastro" class="tela">
     <div class="container">
         <h2>Criar Conta</h2>
-        <input id="cNome" placeholder="Nome Completo">
-        <input id="cCpf" placeholder="CPF">
-        <input id="cSenha" type="password" placeholder="Senha">
-        <button class="btn-main" onclick="registrar()">Finalizar Cadastro</button>
-        <button onclick="ir('login')" style="background:#888; margin-top:10px;">Voltar</button>
+        <div class="card">
+            <input id="cNome" placeholder="Nome Completo">
+            <input id="cCpf" placeholder="CPF (apenas números)">
+            <input id="cSenha" type="password" placeholder="Crie uma Senha">
+            <button class="btn-main" onclick="registrar()">Finalizar Cadastro</button>
+            <button class="btn-sec" onclick="ir('login')">Voltar ao Login</button>
+        </div>
     </div>
 </div>
 
 <div id="home" class="tela">
     <div class="header" id="headerCliente">
         <span id="welcome">Olá</span>
-        <button style="width:auto; background:rgba(0,0,0,0.2)" onclick="voltarParaLogin()">Sair</button>
+        <button style="width:auto; background:rgba(0,0,0,0.2); margin:0" onclick="sair()">Sair</button>
     </div>
     <div class="container">
-        <button class="btn-sec" onclick="ir('pedidos_cliente')">📦 Meus Pedidos / Rastreio</button>
+        <button class="btn-sec" onclick="ir('pedidos_cliente')" style="margin-bottom:10px">📦 Meus Pedidos / Rastreio</button>
         <div class="cat-nav" id="catNav"></div>
         <div class="grid" id="listaLoja"></div>
     </div>
     <div class="cart-float" onclick="ir('carrinho')">
         🛒 <span class="cart-count" id="cartCount">0</span>
     </div>
-    <button onclick="ir('chat')" style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%; background:var(--whatsapp); border:none; font-size:25px; color:white; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">💬</button>
+    <button onclick="ir('chat')" style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%; background:var(--whatsapp); border:none; font-size:25px; color:white; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index:99;">💬</button>
 </div>
 
 <div id="pedidos_cliente" class="tela">
     <div class="header">
-        <button onclick="ir('home')" style="width:auto; background:none; font-size:20px">←</button>
-        <span>Meus Pedidos</span>
+        <button onclick="ir('home')" style="width:auto; background:none; font-size:20px; margin:0">←</button>
+        <span>Rastreamento</span>
         <div style="width:30px"></div>
     </div>
     <div class="container" id="lista_pedidos_cliente"></div>
@@ -97,31 +103,31 @@
 
 <div id="carrinho" class="tela">
     <div class="header">
-        <button onclick="ir('home')" style="width:auto; background:none; font-size:20px">←</button>
+        <button onclick="ir('home')" style="width:auto; background:none; font-size:20px; margin:0">←</button>
         <span>Meu Carrinho</span>
         <div style="width:30px"></div>
     </div>
     <div class="container">
         <div id="itensCarrinho"></div>
         <div class="card" id="cardCheckout" style="display:none">
-            <h3>Finalizar Compra</h3>
+            <h3>Entrega</h3>
             <select id="tipoEntrega" onchange="renderizarCarrinho()">
                 <option value="retirada">Retirar na Loja (Grátis)</option>
                 <option value="entrega">Receber em Casa (+ R$ 7,00)</option>
             </select>
             <div id="boxEndereco" style="display:none">
-                <textarea id="endEntrega" placeholder="Endereço: Rua, Nº, Bairro"></textarea>
+                <textarea id="endEntrega" placeholder="Endereço Completo: Rua, Nº, Bairro"></textarea>
             </div>
             <select id="formaPagto">
                 <option value="">Forma de Pagamento</option>
                 <option value="Pix">Pix</option>
-                <option value="Cartão">Cartão</option>
+                <option value="Cartão">Cartão na Entrega</option>
                 <option value="Dinheiro">Dinheiro</option>
             </select>
             <div class="total-info" id="txtSubtotal">Subtotal: R$ 0,00</div>
             <div class="total-info" id="txtTaxa">Entrega: R$ 0,00</div>
-            <h2 id="totalCarrinho" style="text-align:right; margin-top:0;">Total: R$ 0,00</h2>
-            <button class="btn-whatsapp" onclick="finalizarPedido()">🚀 Enviar via WhatsApp</button>
+            <h2 id="totalCarrinho" style="text-align:right; margin-top:0; color:green;">Total: R$ 0,00</h2>
+            <button class="btn-whatsapp" onclick="finalizarPedido()">🚀 Finalizar via WhatsApp</button>
         </div>
     </div>
 </div>
@@ -129,60 +135,70 @@
 <div id="admin" class="tela">
     <div class="header" id="headerAdmin" style="background:var(--admin-bg)">
         <span>⚙️ Painel Gestor</span>
-        <button style="width:auto; background:rgba(255,255,255,0.2)" onclick="voltarParaLogin()">Sair</button>
+        <button style="width:auto; background:rgba(255,255,255,0.2); margin:0" onclick="sair()">Sair</button>
     </div>
     <div class="container">
         <div class="finance-box">
             <div class="fin-card" style="background:#2ecc71"><small>Faturamento</small><br><strong id="finBruto">R$ 0,00</strong></div>
-            <div class="fin-card" style="background:#3498db"><small>Lucro Líquido</small><br><strong id="finLiquido">R$ 0,00</strong></div>
+            <div class="fin-card" style="background:#3498db"><small>Lucro Est.</small><br><strong id="finLiquido">R$ 0,00</strong></div>
         </div>
+        
         <div class="card">
-            <h3>📦 Pedidos Recentes</h3>
-            <div id="lista_pedidos_admin"></div>
+            <h3>📦 Pedidos e Chats</h3>
+            <button class="btn-sec" onclick="ir('admin_pedidos')">Ver Todos os Pedidos</button>
+            <div id="lista_chats_admin" style="margin-top:10px"></div>
         </div>
+
         <div class="card">
-            <h3>💬 Suporte Chat</h3>
-            <div id="lista_chats_admin"></div>
-        </div>
-        <div class="card">
-            <h3>🛠 Configurações e Produtos</h3>
+            <h3>🎨 Loja e Produtos</h3>
             <input id="cfgNome" placeholder="Nome do Mercado">
-            <input id="cfgWhats" placeholder="WhatsApp (55...)">
-            <input type="color" id="cfgCor">
-            <button onclick="salvarConfig()" class="btn-main">Salvar Site</button>
+            <input id="cfgWhats" placeholder="WhatsApp (Ex: 552199999999)">
+            <input type="color" id="cfgCor" style="height:50px">
+            <button onclick="salvarConfig()" class="btn-main">Atualizar Loja</button>
             <hr>
-            <input id="pNome" placeholder="Nome do Produto">
+            <h4>Novo Produto</h4>
+            <input id="pNome" placeholder="Nome">
             <input id="pCusto" type="number" step="0.01" placeholder="Custo (Líquido)">
             <input id="pVenda" type="number" step="0.01" placeholder="Venda (Bruto)">
             <select id="pCat">
-                <option>Açougue</option><option>Bebida</option><option>Limpeza</option><option>Padaria</option><option>Mercearia</option>
+                <option>Mercearia</option><option>Açougue</option><option>Bebida</option><option>Limpeza</option><option>Padaria</option>
             </select>
-            <button onclick="addProduto()" class="btn-main" style="background:var(--admin-bg)">Adicionar Produto</button>
+            <button onclick="addProduto()" class="btn-sec">Adicionar Produto</button>
         </div>
+
         <div class="card">
-            <h3>👥 Clientes</h3>
+            <h3>👥 Lista de Clientes</h3>
             <div id="lista_usuarios_admin"></div>
         </div>
     </div>
 </div>
 
+<div id="admin_pedidos" class="tela">
+    <div class="header" style="background:var(--admin-bg)">
+        <button onclick="ir('admin')" style="width:auto; background:none; font-size:20px; margin:0">←</button>
+        <span>Todos os Pedidos</span>
+        <div style="width:30px"></div>
+    </div>
+    <div class="container" id="lista_pedidos_all"></div>
+</div>
+
 <div id="chat" class="tela">
     <div class="chat-screen">
         <div class="header" style="background:#075e54">
-            <button onclick="voltarDoChat()" style="width:auto; background:none; font-size:20px">←</button>
+            <button onclick="voltarDoChat()" style="width:auto; background:none; font-size:20px; margin:0">←</button>
             <span id="chatTitulo">Suporte</span>
             <div style="width:30px"></div>
         </div>
         <div class="chat-messages" id="box_msgs"></div>
         <div class="chat-footer">
-            <input id="msg_input" placeholder="Digite sua mensagem...">
-            <button onclick="enviarMensagem()" style="width:50px; border-radius:50%; background:var(--whatsapp); color:white">➤</button>
+            <input id="msg_input" placeholder="Escreva aqui...">
+            <button onclick="enviarMensagem()" style="width:50px; height:50px; border-radius:50%; background:var(--whatsapp); color:white; margin:0">➤</button>
         </div>
     </div>
 </div>
 
 <script>
-// BANCO DE DADOS LOCAL
+// DADOS E PERSISTÊNCIA
 let usuarios = JSON.parse(localStorage.getItem("m_users")) || {};
 let produtos = JSON.parse(localStorage.getItem("m_prod")) || [];
 let config = JSON.parse(localStorage.getItem("m_cfg")) || { nome: "Medela Supermercado", cor: "#e53935", whats: "" };
@@ -190,53 +206,80 @@ let mensagens = JSON.parse(localStorage.getItem("m_chat")) || {};
 let pedidos_db = JSON.parse(localStorage.getItem("m_pedidos")) || [];
 let carrinho = [];
 let taxaEntrega = 7.00;
-let sessaoAtiva = ""; let clienteNoChat = ""; let modoAdminChat = false;
+let sessaoAtiva = ""; 
+let clienteNoChat = ""; 
+let modoAdminChat = false;
 
-// INICIALIZAÇÃO
+// INICIALIZAR SITE
 function aplicarEstilos() {
     document.getElementById("brandName").innerText = "🛒 " + config.nome;
     document.getElementById("siteTitle").innerText = config.nome;
     document.getElementById("dynamicStyles").innerHTML = `:root { --primary: ${config.cor}; --admin-bg: #2c3e50; --bg: #f4f4f4; --whatsapp: #25d366; }`;
-    document.getElementById("headerCliente").style.backgroundColor = config.cor;
     document.getElementById("cfgWhats").value = config.whats || "";
     document.getElementById("cfgNome").value = config.nome;
+    document.getElementById("cfgCor").value = config.cor;
 }
 
-function ir(tela) {
+// NAVEGAÇÃO ENTRE TELAS
+function ir(telaId) {
     document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
-    document.getElementById(tela).classList.add('ativa');
-    if(tela === 'home') renderizarLoja();
-    if(tela === 'admin') renderizarAdmin();
-    if(tela === 'carrinho') renderizarCarrinho();
-    if(tela === 'chat') renderizarMensagens();
-    if(tela === 'pedidos_cliente') renderizarPedidosCliente();
-    window.scrollTo(0,0);
+    const destino = document.getElementById(telaId);
+    if(destino) {
+        destino.classList.add('ativa');
+        if(telaId === 'home') renderizarLoja();
+        if(telaId === 'admin') renderizarAdmin();
+        if(telaId === 'admin_pedidos') renderizarAdminPedidos();
+        if(telaId === 'carrinho') renderizarCarrinho();
+        if(telaId === 'chat') renderizarMensagens();
+        if(telaId === 'pedidos_cliente') renderizarPedidosCliente();
+        window.scrollTo(0,0);
+    }
 }
 
-// LOGIN E CADASTRO
+// SISTEMA DE LOGIN
 function entrar() {
-    let cpf = document.getElementById("lCpf").value;
-    let senha = document.getElementById("lSenha").value;
-    if(cpf === 'admin' && senha === 'admin123') { sessaoAtiva = "admin"; ir('admin'); return; }
-    if(usuarios[cpf] && usuarios[cpf].senha === senha) { sessaoAtiva = cpf; ir('home'); }
-    else { alert("Dados incorretos!"); }
+    const cpf = document.getElementById("lCpf").value.trim();
+    const senha = document.getElementById("lSenha").value.trim();
+    
+    if(cpf === 'admin' && senha === 'admin123') { 
+        sessaoAtiva = "admin"; 
+        ir('admin'); 
+        return; 
+    }
+    
+    if(usuarios[cpf] && usuarios[cpf].senha === senha) { 
+        sessaoAtiva = cpf; 
+        ir('home'); 
+    } else { 
+        alert("CPF ou Senha incorretos!"); 
+    }
 }
 
 function registrar() {
-    let n = document.getElementById("cNome").value;
-    let c = document.getElementById("cCpf").value;
-    let s = document.getElementById("cSenha").value;
+    const n = document.getElementById("cNome").value.trim();
+    const c = document.getElementById("cCpf").value.trim();
+    const s = document.getElementById("cSenha").value.trim();
     if(!n || !c || !s) return alert("Preencha todos os campos!");
     usuarios[c] = { nome: n, senha: s };
     localStorage.setItem("m_users", JSON.stringify(usuarios));
+    alert("Cadastro realizado!");
     ir('login');
 }
 
-// LOJA
+function sair() {
+    sessaoAtiva = "";
+    carrinho = [];
+    document.getElementById("cartCount").innerText = "0";
+    ir('login');
+}
+
+// LOJA E CARRINHO
 function renderizarLoja() {
     document.getElementById("welcome").innerText = "Olá, " + (usuarios[sessaoAtiva]?.nome || "Cliente");
-    const cats = ["Todos", "Açougue", "Bebida", "Limpeza", "Padaria", "Mercearia"];
-    document.getElementById("catNav").innerHTML = cats.map(c => `<button class="cat-btn" onclick="renderizarFiltrado('${c}')">${c}</button>`).join('');
+    const cats = ["Todos", "Mercearia", "Açougue", "Bebida", "Limpeza", "Padaria"];
+    document.getElementById("catNav").innerHTML = cats.map(c => `
+        <button class="cat-btn" onclick="renderizarFiltrado('${c}')">${c}</button>
+    `).join('');
     renderizarFiltrado("Todos");
 }
 
@@ -244,164 +287,125 @@ function renderizarFiltrado(cat) {
     let lista = cat === "Todos" ? produtos : produtos.filter(p => p.cat === cat);
     document.getElementById("listaLoja").innerHTML = lista.map(p => `
         <div class="card" style="text-align:center">
-            <strong>${p.nome}</strong><br><span style="color:green">R$ ${p.preco.toFixed(2)}</span><br>
-            <button class="btn-main" onclick="addAoCarrinho('${p.nome}', ${p.preco})" style="margin-top:10px; font-size:12px">Adicionar</button>
-        </div>`).join('') || "<p>Nenhum produto.</p>";
+            <strong style="display:block; min-height:40px">${p.nome}</strong>
+            <span style="color:green; font-weight:bold; font-size:18px">R$ ${p.preco.toFixed(2)}</span>
+            <button class="btn-main" onclick="addAoCarrinho('${p.nome}', ${p.preco})">🛒 Adicionar</button>
+        </div>`).join('');
 }
 
-// CARRINHO
 function addAoCarrinho(nome, preco) {
     carrinho.push({ id: Date.now(), nome, preco });
     document.getElementById("cartCount").innerText = carrinho.length;
 }
 
-function removerDoCarrinho(idItem) {
-    carrinho = carrinho.filter(i => i.id !== idItem);
-    document.getElementById("cartCount").innerText = carrinho.length;
-    renderizarCarrinho();
-}
-
 function renderizarCarrinho() {
-    let box = document.getElementById("itensCarrinho");
+    const box = document.getElementById("itensCarrinho");
     let subtotal = 0;
-    let tipo = document.getElementById("tipoEntrega").value;
+    const tipo = document.getElementById("tipoEntrega").value;
+    
     if(carrinho.length === 0) {
-        box.innerHTML = "<p style='text-align:center'>Carrinho vazio.</p>";
+        box.innerHTML = "<p style='text-align:center'>Seu carrinho está vazio.</p>";
         document.getElementById("cardCheckout").style.display = "none";
-    } else {
-        box.innerHTML = carrinho.map((item) => {
-            subtotal += item.preco;
-            return `<div class="card" style="display:flex; justify-content:space-between; align-items:center">
-                <div><b>${item.nome}</b><br>R$ ${item.preco.toFixed(2)}</div>
-                <button class="btn-remove" onclick="removerDoCarrinho(${item.id})">✕</button>
-            </div>`;
-        }).join('');
-        document.getElementById("cardCheckout").style.display = "block";
+        return;
     }
-    let taxa = tipo === "entrega" ? taxaEntrega : 0;
+    
+    document.getElementById("cardCheckout").style.display = "block";
+    box.innerHTML = carrinho.map((item) => {
+        subtotal += item.preco;
+        return `<div class="card" style="display:flex; justify-content:space-between; align-items:center; padding:10px 15px">
+            <div><b>${item.nome}</b><br><small>R$ ${item.preco.toFixed(2)}</small></div>
+            <button class="btn-remove" onclick="removerDoCarrinho(${item.id})">✕</button>
+        </div>`;
+    }).join('');
+
+    const taxa = tipo === "entrega" ? taxaEntrega : 0;
     document.getElementById("boxEndereco").style.display = tipo === "entrega" ? "block" : "none";
     document.getElementById("txtSubtotal").innerText = "Subtotal: R$ " + subtotal.toFixed(2);
     document.getElementById("txtTaxa").innerText = "Entrega: R$ " + taxa.toFixed(2);
     document.getElementById("totalCarrinho").innerText = "Total: R$ " + (subtotal + taxa).toFixed(2);
 }
 
+function removerDoCarrinho(id) {
+    carrinho = carrinho.filter(i => i.id !== id);
+    document.getElementById("cartCount").innerText = carrinho.length;
+    renderizarCarrinho();
+}
+
 function finalizarPedido() {
-    let tipo = document.getElementById("tipoEntrega").value;
-    let endereco = document.getElementById("endEntrega").value;
-    let pagamento = document.getElementById("formaPagto").value;
-    if(tipo === "entrega" && !endereco) return alert("Informe o endereço!");
-    if(!pagamento) return alert("Escolha o pagamento!");
+    const tipo = document.getElementById("tipoEntrega").value;
+    const endereco = document.getElementById("endEntrega").value;
+    const pagamento = document.getElementById("formaPagto").value;
+    if(tipo === "entrega" && !endereco) return alert("Por favor, informe seu endereço!");
+    if(!pagamento) return alert("Escolha a forma de pagamento!");
 
     let subtotal = 0;
     let itensNomes = carrinho.map(i => { subtotal += i.preco; return i.nome; });
-    let totalF = subtotal + (tipo === "entrega" ? taxaEntrega : 0);
+    let totalFinal = subtotal + (tipo === "entrega" ? taxaEntrega : 0);
 
-    let novo = {
+    const novoPedido = {
         id: "#" + Math.floor(Math.random() * 9000 + 1000),
         clienteCpf: sessaoAtiva,
         clienteNome: usuarios[sessaoAtiva]?.nome || "Visitante",
         itens: itensNomes.join(", "),
-        total: totalF,
+        total: totalFinal,
         tipo: tipo,
         pagamento: pagamento,
         endereco: tipo === "entrega" ? endereco : "Retirada na Loja",
         data: new Date().toLocaleString()
     };
 
-    pedidos_db.unshift(novo);
+    pedidos_db.unshift(novoPedido);
     localStorage.setItem("m_pedidos", JSON.stringify(pedidos_db));
 
-    let msgZap = `🛒 *PEDIDO ${novo.id}*\n\n▪️ *Itens:* ${novo.itens}\n💰 *TOTAL: R$ ${novo.total.toFixed(2)}*\n📦 *Tipo:* ${tipo}\n💳 *Pgto:* ${pagamento}\n📍 *Local:* ${novo.endereco}`;
-    window.open(`https://api.whatsapp.com/send?phone=${config.whats}&text=${encodeURIComponent(msgZap)}`, '_blank');
+    const msgZap = `🛒 *NOVO PEDIDO ${novoPedido.id}*\n\n✅ *Produtos:* ${novoPedido.itens}\n\n💰 *TOTAL:* R$ ${novoPedido.total.toFixed(2)}\n📦 *Entrega:* ${tipo}\n💳 *Pagamento:* ${pagamento}\n📍 *Local:* ${novoPedido.endereco}`;
+    
+    if(config.whats) {
+        window.open(`https://api.whatsapp.com/send?phone=${config.whats}&text=${encodeURIComponent(msgZap)}`, '_blank');
+    } else {
+        alert("Pedido salvo! (Configure o WhatsApp no Admin)");
+    }
 
-    carrinho = []; document.getElementById("cartCount").innerText = "0";
-    alert("Pedido realizado!"); ir('pedidos_cliente');
+    carrinho = []; 
+    document.getElementById("cartCount").innerText = "0";
+    ir('pedidos_cliente');
 }
 
-// RASTREIO CLIENTE
+// RASTREIO E ADMIN
 function renderizarPedidosCliente() {
-    let lista = pedidos_db.filter(p => p.clienteCpf === sessaoAtiva);
+    const lista = pedidos_db.filter(p => p.clienteCpf === sessaoAtiva);
     document.getElementById("lista_pedidos_cliente").innerHTML = lista.map(p => `
         <div class="card">
             <div style="display:flex; justify-content:space-between"><strong>Pedido ${p.id}</strong> <span style="color:var(--primary)">Pendente</span></div>
-            <small>${p.data}</small><br><p>${p.itens}</p>
+            <small>${p.data}</small><hr><p>${p.itens}</p>
             <div style="text-align:right"><strong>Total: R$ ${p.total.toFixed(2)}</strong></div>
-        </div>`).join('') || "<p style='text-align:center'>Nenhum pedido.</p>";
+        </div>`).join('') || "<p style='text-align:center'>Nenhum pedido encontrado.</p>";
 }
 
-// ADMIN
 function renderizarAdmin() {
-    document.getElementById("lista_pedidos_admin").innerHTML = pedidos_db.map(p => `
-        <div style="border-bottom:1px solid #eee; padding:10px 0">
-            <b>${p.id} - ${p.clienteNome}</b><br>
-            <small>${p.data} | ${p.endereco}</small><br>
-            <strong>Total: R$ ${p.total.toFixed(2)}</strong>
-        </div>`).join('') || "Sem pedidos.";
+    let faturamento = pedidos_db.reduce((acc, p) => acc + p.total, 0);
+    document.getElementById("finBruto").innerText = "R$ " + faturamento.toFixed(2);
+    document.getElementById("finLiquido").innerText = "R$ " + (faturamento * 0.25).toFixed(2); // Lucro Simulado 25%
 
     document.getElementById("lista_chats_admin").innerHTML = Object.keys(mensagens).map(c => `
         <button onclick="abrirChatAdmin('${c}')" style="background:#eee; color:#333; margin-bottom:5px; text-align:left">💬 Suporte: ${usuarios[c]?.nome || c}</button>
-    `).join('') || "Sem conversas.";
+    `).join('') || "<small>Nenhuma conversa ativa.</small>";
 
-    let faturamento = pedidos_db.reduce((acc, p) => acc + p.total, 0);
-    // Lucro aproximado baseado na margem dos produtos cadastrados
-    let lucro = faturamento * 0.3; 
-    document.getElementById("finBruto").innerText = "R$ " + faturamento.toFixed(2);
-    document.getElementById("finLiquido").innerText = "R$ " + lucro.toFixed(2);
+    document.getElementById("lista_usuarios_admin").innerHTML = Object.keys(usuarios).map(c => `
+        <div style="font-size:12px; border-bottom:1px solid #eee; padding:5px">${usuarios[c].nome} | ${c} | Senha: ${usuarios[c].senha}</div>
+    `).join('');
+}
+
+function renderizarAdminPedidos() {
+    document.getElementById("lista_pedidos_all").innerHTML = pedidos_db.map(p => `
+        <div class="card">
+            <b>${p.id} - ${p.clienteNome}</b><br>
+            <small>${p.data}</small><br>
+            <span>${p.itens}</span><br>
+            <strong>Total: R$ ${p.total.toFixed(2)}</strong>
+        </div>`).join('') || "Sem pedidos registrados.";
 }
 
 function addProduto() {
-    let n = document.getElementById("pNome").value;
-    let cus = parseFloat(document.getElementById("pCusto").value);
-    let ven = parseFloat(document.getElementById("pVenda").value);
-    let cat = document.getElementById("pCat").value;
-    if(!n || isNaN(ven)) return alert("Preencha os valores!");
-    produtos.push({nome: n, preco: ven, custo: cus, cat: cat});
-    localStorage.setItem("m_prod", JSON.stringify(produtos));
-    alert("Produto cadastrado!");
-    renderizarAdmin();
-}
-
-function salvarConfig() {
-    config.nome = document.getElementById("cfgNome").value || config.nome;
-    config.cor = document.getElementById("cfgCor").value;
-    config.whats = document.getElementById("cfgWhats").value;
-    localStorage.setItem("m_cfg", JSON.stringify(config));
-    aplicarEstilos(); alert("Site Atualizado!");
-}
-
-function voltarParaLogin() { sessaoAtiva = ""; ir('login'); }
-
-// CHAT SUPORTE
-function abrirSuporteVisitante() {
-    sessaoAtiva = "visitante_" + Math.floor(Math.random()*999);
-    clienteNoChat = sessaoAtiva; modoAdminChat = false;
-    ir('chat');
-}
-
-function abrirChatAdmin(id) {
-    clienteNoChat = id; modoAdminChat = true;
-    ir('chat');
-}
-
-function enviarMensagem() {
-    let input = document.getElementById("msg_input");
-    if(!input.value) return;
-    let id = modoAdminChat ? clienteNoChat : sessaoAtiva;
-    if(!mensagens[id]) mensagens[id] = [];
-    mensagens[id].push({ texto: input.value, autor: modoAdminChat ? 'admin' : 'cliente' });
-    localStorage.setItem("m_chat", JSON.stringify(mensagens));
-    input.value = ""; renderizarMensagens();
-}
-
-function renderizarMensagens() {
-    let id = modoAdminChat ? clienteNoChat : sessaoAtiva;
-    let msgs = mensagens[id] || [];
-    document.getElementById("box_msgs").innerHTML = msgs.map(m => `
-        <div class="msg ${m.autor === (modoAdminChat ? 'admin' : 'cliente') ? 'sent' : 'received'}">${m.texto}</div>
-    `).join('');
-    document.getElementById("box_msgs").scrollTop = 9999;
-}
-
-function voltarDoChat() {
-    if(modoAdminChat) ir('admin');
-    else if(sessaoAtiva.includes("visitant
+    const n = document.getElementById("pNome").value;
+    const cus = parseFloat(document.getElementById("pCusto").value);
+    const ven = parseFl
