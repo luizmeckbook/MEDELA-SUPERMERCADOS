@@ -7,39 +7,94 @@ import java.net.InetSocketAddress;
 
 public class App {
     public static void main(String[] args) throws IOException {
-        // Cria o servidor na porta 8080
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
-        
-        // Define a rota principal "/"
+
         server.createContext("/", new HomeHandler());
-        
-        server.setExecutor(null); 
-        System.out.println("Servidor orgânico rodando em http://localhost:8080");
+        server.createContext("/acao", new AcaoHandler()); // rota do botão
+
+        server.setExecutor(null);
+        System.out.println("Servidor rodando em http://localhost:8080");
         server.start();
     }
 
+    // Página principal
     static class HomeHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            // O conteúdo HTML gerado manualmente (Orgânico)
+
             String response = """
                 <html>
                 <head>
                     <meta charset="UTF-8">
                     <style>
-                        body { font-family: 'Segoe UI', sans-serif; line-height: 1.6; max-width: 600px; margin: 40px auto; padding: 20px; background: #fafafa; }
-                        h1 { color: #2e7d32; border-bottom: 2px solid #2e7d32; }
-                        .principio { background: white; padding: 15px; margin-bottom: 10px; border-left: 5px solid #2e7d32; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+                        body {
+                            font-family: Arial;
+                            text-align: center;
+                            background: #f5f5f5;
+                        }
+                        h1 { color: green; }
+
+                        .box {
+                            background: white;
+                            padding: 20px;
+                            margin: 20px auto;
+                            width: 300px;
+                            border-radius: 10px;
+                            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                        }
+
+                        button {
+                            padding: 10px 20px;
+                            border: none;
+                            background: green;
+                            color: white;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        }
+
+                        button:hover {
+                            background: darkgreen;
+                        }
                     </style>
                 </head>
                 <body>
-                    <h1>Nossos Princípios Orgânicos</h1>
-                    <div class="principio"><strong>Integridade:</strong> Código limpo e transparente.</div>
-                    <div class="principio"><strong>Leveza:</strong> Sem frameworks desnecessários.</div>
-                    <div class="principio"><strong>Crescimento:</strong> Evolução constante do conhecimento.</div>
+
+                    <h1>RUAN ASSISTEC</h1>
+
+                    <div class="box">
+                        <p>Clique no botão:</p>
+
+                        <form action="/acao" method="get">
+                            <button type="submit">Clique aqui</button>
+                        </form>
+
+                    </div>
+
                 </body>
                 </html>
-                """;
+            """;
+
+            exchange.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
+            exchange.sendResponseHeaders(200, response.getBytes().length);
+            OutputStream os = exchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+    }
+
+    // Ação do botão
+    static class AcaoHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+
+            String response = """
+                <html>
+                <body style="text-align:center; font-family:Arial;">
+                    <h1>Botão Funcionou ✅</h1>
+                    <a href="/">Voltar</a>
+                </body>
+                </html>
+            """;
 
             exchange.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
             exchange.sendResponseHeaders(200, response.getBytes().length);
